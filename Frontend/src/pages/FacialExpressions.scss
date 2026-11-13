@@ -1,0 +1,273 @@
+$blue: #5ac8fa;
+$purple: #c44dff;
+$gradient: linear-gradient(135deg, $blue, $purple);
+
+@keyframes riseUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.frame {
+  position: relative;
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: #ffffff !important;
+  overflow: hidden;
+  color: #000;
+
+  .glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: clamp(2rem, 3vw, 6rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: $gradient;
+    filter: blur(0.8rem);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .particles {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .inner {
+    position: relative;
+    z-index: 2;
+    box-sizing: border-box;
+    min-height: 100vh;
+    min-height: 100svh;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(1rem, 4vw, 2.5rem) clamp(0.75rem, 4vw, 1rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1rem, 3vw, 1.6rem);
+    text-align: center;
+    animation: riseUp 0.8s ease both;
+
+    .camera-off {
+      color: #111;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(1.5rem, 6vw, 4rem);
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.3rem, 5vw, 1.8rem);
+        font-weight: 400;
+      }
+
+      button {
+        width: fit-content;
+      }
+    }
+
+    .camera-video {
+      width: min(100%, 500px);
+      padding: 0.5rem; // gradient border thickness
+      border-radius: 1.2rem;
+      background: $gradient;
+      box-shadow: 0 10px 30px rgba($purple, 0.25);
+
+      &.hidden {
+        display: none;
+      }
+
+      video {
+        display: block;
+        width: 100%;
+        aspect-ratio: 5 / 3;
+        max-height: 60svh; // stops it filling the whole screen in landscape
+        object-fit: cover;
+        background: transparent;
+        border-radius: 0.8rem;
+      }
+    }
+  }
+
+  // buttons
+  button {
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    background: $gradient;
+    font-size: clamp(1rem, 3vw, 1.1rem);
+    font-weight: 600;
+    min-height: 2.75rem; // comfortable tap size on phones
+    padding: 0.8rem 1.6rem;
+    border-radius: 0.6rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    // hover only on devices that really have hover (not touch screens)
+    @media (hover: hover) {
+      &:hover {
+        transform: scale(1.08);
+        box-shadow: 0 10px 26px rgba($purple, 0.45);
+      }
+    }
+
+    &:active {
+      transform: scale(1.02);
+    }
+  }
+
+  .status {
+    margin: 0;
+    max-width: 28rem;
+    font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+    color: $purple;
+    font-weight: 500;
+  }
+
+  .error {
+    margin: 0;
+    max-width: 28rem;
+    font-size: clamp(0.9rem, 2.6vw, 1rem);
+    color: #d93025;
+    font-weight: 500;
+  }
+
+  // detected mood
+  .result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: riseUp 0.7s ease both;
+
+    .upper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+
+      h2 {
+        margin: 0;
+        font-weight: 400;
+        font-size: clamp(0.9rem, 3vw, 1.2rem);
+        color: #000;
+      }
+
+      h1 {
+        margin: 0 0 0.6rem;
+        font-weight: 700;
+        font-size: clamp(1.4rem, 6vw, 2rem);
+        color: #000;
+        overflow-wrap: anywhere;
+      }
+    }
+
+    .lower {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+
+      .analyze-again {
+        font-weight: 500;
+        font-size: 1rem;
+        color: $purple;
+        margin-top: 0.4rem;
+        background: rgba(255, 255, 255, 0.25);
+        -webkit-backdrop-filter: blur(4rem);
+        backdrop-filter: blur(2rem);
+        border: none;
+        box-shadow: 0 2px 20px rgba($purple, 0.2);
+      }
+    }
+  }
+}
+
+// soft blurred white background (add class "soft-bg" to any element)
+.soft-bg {
+  position: relative;
+  isolation: isolate;
+  padding: 0.5rem;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -0.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    filter: blur(18px);
+    border-radius: 2rem;
+    z-index: -1;
+    pointer-events: none;
+  }
+}
+
+// ---------- responsive ----------
+
+// phones
+@media (max-width: 480px) {
+  .frame .inner .camera-video {
+    padding: 0.35rem;
+    border-radius: 1rem;
+
+    video {
+      border-radius: 0.65rem;
+    }
+  }
+
+  .frame .inner .camera-off,
+  .frame .result {
+    width: 100%;
+  }
+}
+
+// very small phones
+@media (max-width: 360px) {
+  .frame button {
+    padding: 0.7rem 1.2rem;
+  }
+}
+
+// phones in landscape (short screens)
+@media (max-height: 500px) and (orientation: landscape) {
+  .frame .inner {
+    gap: 0.8rem;
+    padding-block: 0.8rem;
+
+    .camera-off {
+      gap: 1rem;
+    }
+
+    .camera-video video {
+      max-height: 55svh;
+    }
+  }
+}
+
+// big screens
+@media (min-width: 1200px) {
+  .frame .inner {
+    max-width: 720px;
+  }
+
+  .frame .inner .camera-video {
+    width: min(100%, 560px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame .inner,
+  .frame .result {
+    animation-duration: 0.01s !important;
+  }
+}

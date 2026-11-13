@@ -1,0 +1,14 @@
+why not we use REDIS as primary database
+
+=> costly = uses RAM (RAM speedly writes/reads data)
+=>  cant query (stores key value in pair)
+
+MONGODB stores data in BSON
+
+
+
+
+For connecting to reddis : 
+we need : host : redis-cli -u redis://default:ziZe10LGoLu72f7DwLPcfKGGNf0ANN9O@collegial-morning-offer-28743.db.redis.io:14258
+   port :14258
+   password : ziZe10LGoLu72f7DwLPcfKGGNf0ANN9O

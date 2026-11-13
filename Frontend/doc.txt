@@ -1,0 +1,112 @@
+Moodify: Camera access and facial expression detection
+Phase 1: Accessing the camera
+Step 1. Create references to HTML elements and other resources
+
+We created references to:
+- The video element that displays the webcam.
+- The camera stream.
+- The MediaPipe model.
+- The animation frame responsible for continuous detection.
+Step 2. Request camera permission
+
+When the user clicks Start Camera, the browser requests permission to access the webcam.
+
+Step 3. Receive the camera stream
+
+Once permission is granted, the browser returns a MediaStream containing the live camera feed.
+
+Step 4. Connect the stream to the video element
+
+We connect the camera stream to the HTML video element so the user can see themselves on screen.
+
+Step 5. Start playing the video
+
+The browser starts displaying the live webcam feed.
+Phase 2: Initializing MediaPipe
+Step 6. Load the MediaPipe resources
+
+We use FilesetResolver to load the necessary WebAssembly resources required to execute MediaPipe vision tasks in the browser.
+
+Step 7. Load the pre-trained model
+
+We downloaded the Face Landmarker model file (face_landmarker.task).
+
+This is an already-trained machine learning model. We aren't training it ourselves.
+
+Step 8. Create the FaceLandmarker instance
+
+We initialize FaceLandmarker and configure its settings:
+- GPU delegate for processing.
+- Video mode for continuous video analysis.
+- One face to detect.
+- Facial blendshape output enabled.
+At this point, our AI model is ready to analyze faces.
+Phase 3: Facial expression detection
+Step 9. Access the video and initialized model
+
+We retrieve the webcam video element and the initialized FaceLandmarker instance.
+
+Step 10. Check whether the video is ready
+
+We check whether the video has produced a frame that can be analyzed.
+
+Step 11. Pass the video frame to MediaPipe
+
+We send the current video frame to FaceLandmarker for analysis.
+
+Step 12. Analyze the face
+
+MediaPipe processes the frame and detects facial landmarks and facial blendshapes.
+
+Facial landmarks represent important facial positions, while blendshapes represent different facial movements and expression-related features.
+
+Step 13. Retrieve the blendshape results
+
+We extract the blendshape categories for the detected face.
+
+For example:
+- MouthSmileLeft
+- MouthSmileRight
+- JawOpen
+- BrowDownLeft
+- EyeBlinkLeft
+Each category has a numerical score, generally between 0 and 1.
+
+Step 14. Store the results
+
+We save the returned blendshape categories in React state.
+
+This allows React to display the latest scores on the screen.
+
+Step 15. Repeat the process
+
+We use requestAnimationFrame to continuously analyze new video frames.
+
+This is why the numerical scores keep changing as your facial movements change.
+Phase 4: Displaying the results
+Step 16. Display the blendshape names and scores
+
+We use JavaScript's map method to iterate through the blendshape array.
+
+For every category, we display:
+- Its name.
+- Its current score rounded to three decimal places.
+This is exactly what you saw in your screenshot.
+Phase 5: Stopping and cleaning up
+Step 17. Stop the camera
+
+When the user clicks Stop Camera:
+- Stop the camera tracks.
+- Disconnect the video stream.
+- Update the camera state.
+Step 18. Stop continuous detection
+
+We cancel the animation frame so the application stops analyzing video frames.
+
+Step 19. Clean up when leaving the page
+
+When the user navigates away:
+- Stop the camera tracks.
+- Cancel continuous detection.
+- Close the MediaPipe model.
+This prevents unnecessary resource usage.

@@ -1,0 +1,7 @@
+UI => shows UI and navigates (pages , component)
+
+hook=> manages State and APIs (hook)
+
+State=> stores data [auth.context.jsx , posts.context.jsx]
+
+API => Backend se communicate krna 
