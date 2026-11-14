@@ -366,6 +366,20 @@ const classifyMood = (scores) => {
     // Default
     return "Neutral 😐";
 };
+
+
+const [songs, setSongs] = useState([])
+
+const getSongs = async () => {
+  try {
+    const moodKey = detectedMood.split(" ")[0].toLowerCase()
+    const res = await fetch(`http://localhost:5000/api/songs?mood=${moodKey}`)
+    const data = await res.json()
+    setSongs(data)
+  } catch (err) {
+    setError("Could not load songs. Please try again.")
+  }
+}
     useEffect(() => {
 
     return () => {
@@ -409,7 +423,18 @@ const classifyMood = (scores) => {
     </section>
     
     <section className="lower">
-        <button>
+        <button onClick={(getSongs)=>
+            {
+                getSongs.map((s) => (
+  <div className='songs' key={s.trackId}>
+    <img src={s.cover} alt={s.title} />
+    <h3>{s.title}</h3>
+    <p>{s.artist}</p>
+    <audio controls src={s.previewUrl} />
+  </div>
+))
+        }
+        }>
       See Recommended Songs
     </button>
     <button className='analyze-again ' onClick={startCamera}>

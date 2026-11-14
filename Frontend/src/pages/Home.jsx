@@ -119,7 +119,7 @@ const Home = () => {
       <canvas ref={canvasRef} className="particles" aria-hidden="true" />
       <section className="page">
         <div className="app-name">
-          <img src="/play.png" alt="Moodify logo" />
+          <img src="./play.png" alt="Moodify logo" />
           <h1>Moodify</h1>
         </div>
 
@@ -134,7 +134,7 @@ const Home = () => {
       </section>
 
       <footer className="last">
-        <img src="/play.png" alt="" />
+        <img src="./play.png" alt="" />
         <h3>© 2026 Moodify</h3>
       </footer>
     </main>
