@@ -10,5 +10,5 @@ const songSchema = new mongoose.Schema({
   link: String,
   mood: { type: String, index: true }, // happy | sad | angry | surprised | neutral
 })
-const songModel = mongoose.model("songs , songSchema")
+const songModel = mongoose.model("songs" , songSchema)
 module.exports = songModel 

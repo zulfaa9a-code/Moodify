@@ -120,11 +120,12 @@ let gy = -9999
     // 1. Camera access
   const videoRef = useRef(null); // ACCSSES TO HTML VIDEO ELEMENT
    const streamRef = useRef(null);
-
+    const [songs, setSongs] = useState([])
     const [cameraOn, setCameraOn] = useState(false);
     const [error, setError] = useState("");
         const startCamera = async () => {
          try {
+            setSongs('')
         setLoading(true);
 
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -368,12 +369,11 @@ const classifyMood = (scores) => {
 };
 
 
-const [songs, setSongs] = useState([])
 
 const getSongs = async () => {
   try {
     const moodKey = detectedMood.split(" ")[0].toLowerCase()
-    const res = await fetch(`http://localhost:5000/api/songs?mood=${moodKey}`)
+    const res = await fetch(`http://localhost:3000/songs?mood=${moodKey}`)
     const data = await res.json()
     setSongs(data)
   } catch (err) {
@@ -395,55 +395,64 @@ const getSongs = async () => {
     };
 
 }, []);
-  return (
-     <main className="frame">
-        <div ref={glowRef} className="glow" aria-hidden="true" />
-          <canvas ref={canvasRef} className="particles" aria-hidden="true" />
-      < div className="inner">
+return (
+  <main className="frame">
+    <div ref={glowRef} className="glow" aria-hidden="true" />
+    <canvas ref={canvasRef} className="particles" aria-hidden="true" />
+
+    <div className={`inner ${songs.length > 0 ? "wide" : ""}`}>
       <div className={`camera-video ${cameraOn ? "" : "hidden"}`}>
         <video ref={videoRef} autoPlay playsInline muted />
       </div>
-            {(!detectedMood &&!isAnalyzing) && (
-            <div className='camera-off'>
-                <h1 className="soft-bg">Analyze your expression</h1>
-                <button onClick={startCamera}>
-                    Start Camera
-                </button>
+
+      {!detectedMood && !isAnalyzing && (
+        <div className="camera-off">
+          <h1 className="soft-bg">Analyze your expression</h1>
+          <button onClick={startCamera}>Start Camera</button>
+        </div>
+      )}
+
+      {error && <p className="error">{error}</p>}
+
+      {isAnalyzing && (
+        <p className="status soft-bg">Analyzing your mood... Please wait 4 seconds.</p>
+      )}
+
+      {detectedMood && (
+        <div className="result">
+          <section className="mood-panel">
+            <div className="upper soft-bg">
+             {detectedMood!="Unable to detect" && ( <h2>Detected Mood</h2>)}
+              <h1>{detectedMood}</h1>
             </div>
-                
-            ) }
-   {error && <p>{error}</p>}
-    {isAnalyzing && (
-    <p className='status soft-bg'>Analyzing your mood... Please wait 4 seconds.</p> )}
-{detectedMood && (
-  <div className='result'>
-    <section className="upper soft-bg">
-        <h2 >Detected Mood</h2>
-    <h1> {detectedMood} </h1>
-    </section>
-    
-    <section className="lower">
-        <button onClick={(getSongs)=>
-            {
-                getSongs.map((s) => (
-  <div className='songs' key={s.trackId}>
-    <img src={s.cover} alt={s.title} />
+
+            <div className="lower">
+              {detectedMood!="Unable to detect" && (<button onClick={getSongs}>See Recommended Songs</button>) }
+              <button className="analyze-again" onClick={startCamera}>
+                Analyze again
+              </button>
+            </div>
+          </section>
+
+          {songs.length > 0 && (
+            <section className="songs-list">
+              {songs.map((s) => (
+                <div className="songs" key={s.trackId}>
+  <img src={s.cover} alt={s.title} />
+  <div className="info">
     <h3>{s.title}</h3>
     <p>{s.artist}</p>
-    <audio controls src={s.previewUrl} />
   </div>
-))
-        }
-        }>
-      See Recommended Songs
-    </button>
-    <button className='analyze-again ' onClick={startCamera}>
-      Analyze again
-    </button>
-    </section>
-  </div>)} </div>
-    </main>
-  )
+  <audio controls src={s.previewUrl} />
+</div>
+              ))}
+            </section>
+          )}
+        </div>
+      )}
+    </div>
+  </main>
+)
 }
 
 export default FacialExpressions

@@ -1,9 +1,10 @@
-const song = require("../models/song.model.js")
+const song = require("../model/song.model.js")
 
-const MOODS = ["happy", "sad", "angry", "relaxed", "surprised"]
+const MOODS = ["happy", "sad", "angry", "relaxed", "surprised","neutral"]
 
-export const getSongsByMood = async (req, res) => {
+const getSongsByMood = async (req, res) => {
   try {
+    console.log("in getSongsByMood")
     const mood = String(req.query.mood || "").toLowerCase()
 
     if (!MOODS.includes(mood)) {
@@ -19,7 +20,8 @@ export const getSongsByMood = async (req, res) => {
     res.json(songs)
 
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: "Server error" })
+    console.error("getSongsByMood error:", err) // shows the real reason in the terminal
+    res.status(500).json({ error: err.message })
   }
 }
+module.exports ={getSongsByMood}

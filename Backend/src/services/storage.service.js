@@ -1,6 +1,7 @@
 require("dotenv").config()
+
 const mongoose = require("mongoose")
-const Song = require("./model/song.model")
+const song = require("../model/song.model")
 
 const MOOD_QUERIES = {
   happy: ["happy pop hits", "feel good songs", "bollywood dance hits"],
@@ -9,11 +10,10 @@ const MOOD_QUERIES = {
   surprised: ["energetic edm", "party hits", "upbeat bollywood"],
   neutral: ["chill lofi", "acoustic chill", "relaxing instrumental"],
 }
+async function saveSongs() {
+ 
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-
-async function saveSongs() {
-
   for (const [mood, queries] of Object.entries(MOOD_QUERIES)) {
     for (const q of queries) {
       const url =
@@ -27,7 +27,7 @@ async function saveSongs() {
         for (const t of results) {
         if (!t.previewUrl) continue // skip songs with no preview
 
-          await Song.updateOne(
+          await song.updateOne(
             { trackId: t.trackId },
             {
               trackId: t.trackId,
@@ -52,7 +52,6 @@ async function saveSongs() {
     }
   }
   console.log("Seeding done")
-  await mongoose.disconnect()
 }
 
 module.exports ={saveSongs}
