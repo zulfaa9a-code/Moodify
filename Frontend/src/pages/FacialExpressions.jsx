@@ -5,6 +5,7 @@ import {
 } from "@mediapipe/tasks-vision";
 import { useRef, useState, useEffect } from "react";
 import "./FacialExpressions.scss"
+import Nav from '../components/Nav';
 const FacialExpressions = () => {
    // Animation
     const canvasRef = useRef(null)
@@ -395,11 +396,15 @@ const getSongs = async () => {
     };
 
 }, []);
+
+
+
+// Search feautre 
 return (
   <main className="frame">
     <div ref={glowRef} className="glow" aria-hidden="true" />
     <canvas ref={canvasRef} className="particles" aria-hidden="true" />
-
+    {!cameraOn && !detectedMood && !isAnalyzing && <Nav />} 
     <div className={`inner ${songs.length > 0 ? "wide" : ""}`}>
       <div className={`camera-video ${cameraOn ? "" : "hidden"}`}>
         <video ref={videoRef} autoPlay playsInline muted />
